@@ -15,7 +15,8 @@ public class MainActivity extends Activity {
         // Set fullscreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow()获取当前activity的window窗口，setFlags()设置窗口的标志位，FLAG_FULLSCREEN表示全屏显示，不显示状态栏
         
         // Create and set the game view
         gameView = new GameView(this);

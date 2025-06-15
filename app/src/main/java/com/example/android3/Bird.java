@@ -1,23 +1,23 @@
 package com.example.android3;
 
 public class Bird {
-    private float x, y;
-    private float velocity;
-    private static final float GRAVITY = 0.8f;
-    private static final float JUMP_FORCE = -15f;
+    private float x, y;//属性
+    private float velocity;//速度，只有垂直的速度
+    private static final float GRAVITY = 1.5f;//重力
+    private static final float JUMP_FORCE = -15f;//跳跃力
 
-    public Bird(float x, float y) {
-        this.x = x;
-        this.y = y;
-        this.velocity = 0;
+    public Bird(float x, float y) {//构造函数
+        this.x = x;//初始化x坐标
+        this.y = y;//初始化y坐标
+        this.velocity = 0;//初始化速度
     }
 
-    public void update() {
-        velocity += GRAVITY;
-        y += velocity;
+    public void update() {//更新坐标
+        velocity += GRAVITY;//重力
+        y += velocity;//更新y坐标
     }
 
-    public void jump() {
+    public void jump() {//速度=跳跃力
         velocity = JUMP_FORCE;
     }
 
@@ -29,7 +29,7 @@ public class Bird {
         return y;
     }
 
-    public boolean checkCollision(Pipe pipe) {
+    public boolean checkCollision(Pipe pipe) {//和Pipe做碰撞检测
         float birdLeft = x - 30;
         float birdRight = x + 30;
         float birdTop = y - 30;
