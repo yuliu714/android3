@@ -1,12 +1,16 @@
 package com.example.android3;
 
+import android.graphics.Point;
+
+import java.util.ArrayList;
+
 public class Bird {
     private float x, y;//属性
-    private float velocity =-15f;//速度，只有垂直的速度
-    private static final float GRAVITY = 1.5f;//重力
+    private float velocity ;//速度，只有垂直的速度
+    //private static final float GRAVITY = 1.5f;//重力
     private static final float JUMP_FORCE = -15f;//跳跃力
 
-    private boolean isMovingUp=true;
+
 
     public Bird(float x, float y) {//构造函数
         this.x = x;//初始化x坐标
@@ -17,11 +21,14 @@ public class Bird {
     public void update() {//更新坐标
         //velocity += GRAVITY;//重力
         y += velocity;//更新y坐标
+
     }
 
     public void jump() {//速度=跳跃力
-        isMovingUp=!isMovingUp;
-        velocity = isMovingUp?JUMP_FORCE:-JUMP_FORCE;
+        velocity = JUMP_FORCE;
+    }
+    public void fall() {//速度=跳跃力
+        velocity = -JUMP_FORCE;
     }
 
     public float getX() {

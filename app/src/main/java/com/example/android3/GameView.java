@@ -4,13 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Random;import java.util.Random;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private Bird bird;
@@ -24,8 +26,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread gameThread;//线程
     private Paint paint;//画笔
     private Random random;
-    private static final int PIPE_SPACING = 300;
-    private static final int PIPE_GAP = 400;
+    private static final int PIPE_SPACING = 300;//两根之间的间隔
+    private MediaPlayer bgm1;
+    private MediaPlayer bgm2;
+
+
+    private int PIPE_GAP = 400;//一根里面的间隔//修改下
     private static final int PIPE_WIDTH = 100;
     private RectF restartButton;//矩形类
     private static final String RESTART_TEXT = "重新开始";
@@ -38,12 +44,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         random = new Random();
         score = 0;
         isGameOver = false;
+
+
+
+
+
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {//在surface创建时初始化游戏
         screenWidth = getWidth();
         screenHeight = getHeight();
+        bgm1 = MediaPlayer.create(this.getContext(),R.raw.bgm1);
+        bgm2 = MediaPlayer.create(this.getContext(),R.raw.endbgm);
         initGame();
     }
 
@@ -53,6 +66,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         score = 0;
         isGameOver = false;
         isPlaying = true;
+        bgm1.start();
+        if(bgm2!=null &&bgm2.isPlaying()){
+            bgm2.pause();
+        }
+
         if (gameThread == null || !gameThread.isAlive()) {//如果线程不存在或不活跃，则创建新线程
             gameThread = new Thread(this);//创建新线程
             gameThread.start();//启动线程
@@ -79,6 +97,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        if (bgm1 != null) {
+            bgm1.stop();
+            bgm1.release();
+            bgm1 = null;
+        }
+        if (bgm2 != null) {
+            bgm2.stop();
+            bgm2.release();
+            bgm2 = null;
+        }
+
     }
 
     @Override
@@ -128,6 +158,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
     }
 
+
     private void draw() {//绘制游戏画面
         if (holder.getSurface().isValid()) {//如果表面有效
             canvas = holder.lockCanvas();//锁定画布
@@ -148,6 +179,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 canvas.drawRect(pipe.getX(), pipe.getGapY() + PIPE_GAP,
                         pipe.getX() + PIPE_WIDTH, screenHeight, paint);
             }
+
+
 
             //Paint设置字体颜色大小，Canvas在指定位置画出指定文字
             paint.setColor(Color.WHITE);
@@ -205,6 +238,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         } else {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 bird.jump();
+            }if (event.getAction() == MotionEvent.ACTION_UP) {
+                bird.fall();
             }
         }
         return true;
@@ -212,5 +247,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void gameOver() {
         isGameOver = true;
+        bgm1.pause();
+        bgm2.seekTo(0);
+        bgm2.start();
     }
 }
